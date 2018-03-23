@@ -1,0 +1,654 @@
+swagger: "2.0"
+info:
+  title: Catalogus API
+  version: "0.2.0"
+host: %{API_HOSTNAME}
+basePath: /api/opvragen/v0.2
+produces:
+  - application/json
+x-dotwebstack-ldpath-namespaces:
+  adms: http://www.w3.org/ns/adms#
+  dcat: http://www.w3.org/ns/dcat#
+  dcmiperiod: http://dublincore.org/documents/2006/04/10/dcmi-period/
+  dct: http://purl.org/dc/terms/
+  foaf: http://xmlns.com/foaf/0.1/
+  prov: http://www.w3.org/ns/prov#
+  rdfs: http://www.w3.org/2000/01/rdf-schema#
+  skos: http://www.w3.org/2004/02/skos/core#
+  thes: http://purl.org/iso25964/skos-thes#
+  wdrs: http://www.w3.org/2007/05/powder-s#
+paths:
+  /concept:
+    get:
+      x-dotwebstack-information-product: "http://omgevingswet.overheid.nl/config#IPResource"
+      parameters:
+        - name: subject
+          in: query
+          description: URI of subject
+          required: true
+          type: string
+          x-dotwebstack-parameter: "http://omgevingswet.overheid.nl/config#Subject"
+        - name: status
+          in: query
+          description: status of subject
+          required: false
+          type: string
+          x-dotwebstack-parameter: "http://omgevingswet.overheid.nl/config#Status"
+        - name: beschikbaarOp
+          in: query
+          description: datetime in which the version of the subject became available
+          required: false
+          type: string
+          x-dotwebstack-parameter: "http://omgevingswet.overheid.nl/config#BeschikbaarOp"
+        - name: geldigOp
+          in: query
+          description: datetime in which the version of the subject became usable
+          required: false
+          type: string
+          x-dotwebstack-parameter: "http://omgevingswet.overheid.nl/config#GeldigOp"
+      responses:
+        200:
+          description: OK
+          x-dotwebstack-subject-filter:
+            predicate: "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+            object: "http://www.w3.org/2004/02/skos/core#Concept"
+          schema:
+            $ref: "#/definitions/Concept"
+  /concepten:
+    get:
+      x-dotwebstack-information-product: "http://omgevingswet.overheid.nl/config#IPResources"
+      parameters:
+        - name: term
+          in: query
+          description: filter on starting letter of the concept
+          required: false
+          type: string
+          x-dotwebstack-parameter: "http://omgevingswet.overheid.nl/config#Term"
+        - name: status
+          in: query
+          description: status of subject
+          required: false
+          type: string
+          x-dotwebstack-parameter: "http://omgevingswet.overheid.nl/config#Status"
+        - name: beschikbaarOp
+          in: query
+          description: datetime in which the version of the subject became available
+          required: false
+          type: string
+          x-dotwebstack-parameter: "http://omgevingswet.overheid.nl/config#BeschikbaarOp"
+        - name: geldigOp
+          in: query
+          description: datetime in which the version of the subject became usable
+          required: false
+          type: string
+          x-dotwebstack-parameter: "http://omgevingswet.overheid.nl/config#GeldigOp"
+        - name: dataset
+          in: query
+          description: filter on the dataset the concept is a part of
+          required: false
+          type: string
+          x-dotwebstack-parameter: "http://omgevingswet.overheid.nl/config#Dataset"
+        - name: type
+          in: query
+          description: filter on type of the resource
+          required: false
+          type: string
+          x-dotwebstack-parameter: "http://omgevingswet.overheid.nl/config#Type"
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              type: object
+              required:
+                - concept
+              properties:
+                resource:
+                  type: string
+                  format: string
+                resource_label:
+                  type: string
+                  format: string
+                uitleg:
+                  type: string
+                  format: string
+  /entity:
+    get:
+      x-dotwebstack-information-product: "http://omgevingswet.overheid.nl/config#IPEntity"
+      parameters:
+        - name: subject
+          in: query
+          description: URI of subject
+          required: true
+          type: string
+          x-dotwebstack-parameter: "http://omgevingswet.overheid.nl/config#Subject"
+        - name: beschikbaarOp
+          in: query
+          description: datetime in which the version of the subject became available
+          required: false
+          type: string
+          x-dotwebstack-parameter: "http://omgevingswet.overheid.nl/config#BeschikbaarOp"
+      responses:
+        200:
+          description: OK
+          x-dotwebstack-subject-filter:
+            predicate: "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+            object: "http://www.w3.org/ns/prov#Entity"
+          schema:
+            $ref: "#/definitions/Entity"
+  /waardelijsten:
+    get:
+      x-dotwebstack-information-product: "http://omgevingswet.overheid.nl/config#IPWaardelijsten"
+      parameters:
+        - name: term
+          in: query
+          description: filter on starting letter of the concept
+          required: false
+          type: string
+          x-dotwebstack-parameter: "http://omgevingswet.overheid.nl/config#Term"
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              type: object
+              required:
+                - waardelijst
+                - waardelijst_label
+              properties:
+                waardelijst:
+                  type: string
+                  format: string
+                waardelijst_label:
+                  type: string
+                  format: string
+  /waardeninwaardelijst:
+    get:
+      x-dotwebstack-information-product: "http://omgevingswet.overheid.nl/config#IPWaardenInWaardelijst"
+      parameters:
+        - name: subject
+          in: query
+          description: URI of subject
+          required: true
+          type: string
+          x-dotwebstack-parameter: "http://omgevingswet.overheid.nl/config#Subject"
+        - name: term
+          in: query
+          description: filter on starting letter of the concept
+          required: false
+          type: string
+          x-dotwebstack-parameter: "http://omgevingswet.overheid.nl/config#Term"
+        - name: status
+          in: query
+          description: status of subject
+          required: false
+          type: string
+          x-dotwebstack-parameter: "http://omgevingswet.overheid.nl/config#Status"
+        - name: beschikbaarOp
+          in: query
+          description: datetime in which the version of the subject became available
+          required: false
+          type: string
+          x-dotwebstack-parameter: "http://omgevingswet.overheid.nl/config#BeschikbaarOp"
+        - name: geldigOp
+          in: query
+          description: datetime in which the version of the subject became usable
+          required: false
+          type: string
+          x-dotwebstack-parameter: "http://omgevingswet.overheid.nl/config#GeldigOp"
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              type: object
+              required:
+                - waarde
+              properties:
+                waarde:
+                  type: string
+                  format: string
+                waarde_label:
+                  type: string
+                  format: string
+                notitie:
+                  type: string
+                  format: string
+                startdatumGeldigheid:
+                  type: string
+                  format: string
+                einddatumGeldigheid:
+                  type: string
+                  format: string
+definitions:
+  Agent:
+    type: object
+    required:
+    - type
+    properties:
+      type:
+        type: array
+        x-dotwebstack-ldpath: "rdf:type :: xsd:string"
+        items:
+          type: string
+          x-dotwebstack-ldpath: ". :: xsd:string"
+      naam:
+        type: string
+        x-dotwebstack-ldpath: "rdfs:label :: xsd:string"
+      term:
+        type: string
+        x-dotwebstack-ldpath: "skos:prefLabel :: xsd:string"
+      volledigeNaam:
+        type: string
+        x-dotwebstack-ldpath: "foaf:givenName :: xsd:string"
+      emailadres:
+        type: string
+        x-dotwebstack-ldpath: "foaf:mbox :: xsd:string"
+      namensOrganisatie:
+        type: string
+        x-dotwebstack-ldpath: "prov:actedOnBehalfOf :: xsd:string"
+  Catalog:
+    type: object
+    required:
+    - type
+    properties:
+      type:
+        type: array
+        x-dotwebstack-ldpath: "rdf:type :: xsd:string"
+        items:
+          type: string
+          x-dotwebstack-ldpath: ". :: xsd:string"
+      naam:
+        type: string
+        x-dotwebstack-ldpath: "rdfs:label :: xsd:string"
+      term:
+        type: string
+        x-dotwebstack-ldpath: "skos:prefLabel :: xsd:string"
+      startdatumVersie:
+        type: string
+        x-dotwebstack-ldpath: "prov:generatedAtTime :: xsd:string"
+      einddatumVersie:
+        type: string
+        x-dotwebstack-ldpath: "prov:invalidatedAtTime :: xsd:string"
+      laatsteActiviteit:
+        type: string
+        x-dotwebstack-ldpath: "prov:wasGeneratedBy :: xsd:string"
+      titel:
+        type: string
+        x-dotwebstack-ldpath: "dct:title :: xsd:string"
+      beschrijving:
+        type: string
+        x-dotwebstack-ldpath: "dct:description :: xsd:string"
+      gepubliceerd:
+        type: string
+        x-dotwebstack-ldpath: "dct:issued :: xsd:string"
+      laatsteWijziging:
+        type: string
+        x-dotwebstack-ldpath: "dct:modified :: xsd:string"
+      taal:
+        type: string
+        x-dotwebstack-ldpath: "dct:language :: xsd:string"
+      licentie:
+        type: string
+        x-dotwebstack-ldpath: "dct:license :: xsd:string"
+      rechten:
+        type: string
+        x-dotwebstack-ldpath: "dct:rights :: xsd:string"
+      homepage:
+        type: string
+        x-dotwebstack-ldpath: "foaf:homepage :: xsd:string"
+      werkingsgebied:
+        type: string
+        x-dotwebstack-ldpath: "dct:spatial :: xsd:string"
+      dataset:
+        type: array
+        x-dotwebstack-ldpath: "dcat:dataset :: xsd:string"
+        items:
+          type: string
+          x-dotwebstack-ldpath: ". :: xsd:string"
+      distributie:
+        type: array
+        x-dotwebstack-ldpath: "dcat:distribution :: xsd:string"
+        items:
+          type: string
+          x-dotwebstack-ldpath: ". :: xsd:string"
+      url:
+        type: string
+        x-dotwebstack-ldpath: "dcat:accessURL :: xsd:string"
+      website:
+        type: string
+        x-dotwebstack-ldpath: "dcat:landingPage :: xsd:string"
+      taxonomy:
+        type: string
+        x-dotwebstack-ldpath: "dcat:themeTaxonomy :: xsd:string"
+  Collection:
+    type: object
+    required:
+    - type
+    properties:
+      type:
+        type: array
+        x-dotwebstack-ldpath: "rdf:type :: xsd:string"
+        items:
+          type: string
+          x-dotwebstack-ldpath: ". :: xsd:string"
+      naam:
+        type: string
+        x-dotwebstack-ldpath: "rdfs:label :: xsd:string"
+      term:
+        type: string
+        x-dotwebstack-ldpath: "skos:prefLabel :: xsd:string"
+      uitleg:
+        type: string
+        x-dotwebstack-ldpath: "rdfs:comment :: xsd:string"
+      toelichting:
+        type: string
+        x-dotwebstack-ldpath: "skos:scopeNote :: xsd:string"
+      definitie:
+        type: string
+        x-dotwebstack-ldpath: "skos:definition :: xsd:string"
+      bron:
+        type: string
+        x-dotwebstack-ldpath: "dct:source :: xsd:string"
+      domein:
+        type: string
+        x-dotwebstack-ldpath: "skos:inScheme :: xsd:string"
+      synoniem:
+        type: "array"
+        x-dotwebstack-ldpath: "skos:altLabel :: xsd:string"
+        items:
+          type: string
+      lid:
+        type: array
+        x-dotwebstack-ldpath: "skos:member :: xsd:string"
+        items:
+          type: string
+          x-dotwebstack-ldpath: ". :: xsd:string"
+  Concept:
+    type: object
+    required:
+    - type
+    properties:
+      type:
+        type: array
+        x-dotwebstack-ldpath: "rdf:type"
+        items:
+          type: string
+          x-dotwebstack-ldpath: ". :: xsd:string"
+      naam:
+        type: string
+        x-dotwebstack-ldpath: "rdfs:label :: xsd:string"
+      term:
+        type: string
+        x-dotwebstack-ldpath: "skos:prefLabel :: xsd:string"
+      notitie:
+        type: string
+        x-dotwebstack-ldpath: "skos:notation :: xsd:string"
+      uitleg:
+        type: string
+        x-dotwebstack-ldpath: "rdfs:comment :: xsd:string"
+      toelichting:
+        type: string
+        x-dotwebstack-ldpath: "skos:scopeNote :: xsd:string"
+      definitie:
+        type: string
+        x-dotwebstack-ldpath: "skos:definition :: xsd:string"
+      bron:
+        type: string
+        x-dotwebstack-ldpath: "dct:source :: xsd:string"
+      domein:
+        type: string
+        x-dotwebstack-ldpath: "skos:inScheme :: xsd:string"
+      isSpecialisatieVan:
+        type: array
+        x-dotwebstack-ldpath: "thes:broaderGeneric :: xsd:string"
+        items:
+          type: string
+          x-dotwebstack-ldpath: ". :: xsd:string"
+      isGeneralisatieVan:
+        type: array
+        x-dotwebstack-ldpath: "thes:narrowerGeneric :: xsd:string"
+        items:
+          type: string
+          x-dotwebstack-ldpath: ". :: xsd:string"
+      isOnderdeelVan:
+        type: array
+        x-dotwebstack-ldpath: "thes:broaderPartitive :: xsd:string"
+        items:
+          type: string
+          x-dotwebstack-ldpath: ". :: xsd:string"
+      bestaatUit:
+        type: array
+        x-dotwebstack-ldpath: "thes:narrowerPartitive :: xsd:string"
+        items:
+          type: string
+          x-dotwebstack-ldpath: ". :: xsd:string"
+      heeftBetrekkingOp:
+        type: array
+        x-dotwebstack-ldpath: "skos:semanticRelation :: xsd:string"
+        items:
+          type: string
+          x-dotwebstack-ldpath: ". :: xsd:string"
+      synoniem:
+        type: "array"
+        x-dotwebstack-ldpath: "skos:altLabel :: xsd:string"
+        items:
+          type: string
+      isGerealiseerdIn:
+        type: string
+        x-dotwebstack-ldpath: "foaf:focus :: xsd:string"
+      isOngeveerHetzelfdeAls:
+        type: array
+        x-dotwebstack-ldpath: "skos:closeMatch :: xsd:string"
+        items:
+          type: string
+          x-dotwebstack-ldpath: ". :: xsd:string"
+      isHetzelfdeAls:
+        type: array
+        x-dotwebstack-ldpath: "skos:exactMatch :: xsd:string"
+        items:
+          type: string
+          x-dotwebstack-ldpath: ". :: xsd:string"
+      zieOok:
+        type: array
+        x-dotwebstack-ldpath: "skos:relatedMatch :: xsd:string"
+        items:
+          type: string
+          x-dotwebstack-ldpath: ". :: xsd:string"
+      isBrederDan:
+        type: array
+        x-dotwebstack-ldpath: "skos:broadMatch :: xsd:string"
+        items:
+          type: string
+          x-dotwebstack-ldpath: ". :: xsd:string"
+      isEngerDan:
+        type: array
+        x-dotwebstack-ldpath: "skos:narrowMatch :: xsd:string"
+        items:
+          type: string
+          x-dotwebstack-ldpath: ". :: xsd:string"
+  Dataset:
+    type: object
+    required:
+    - type
+    properties:
+      type:
+        type: array
+        x-dotwebstack-ldpath: "rdf:type :: xsd:string"
+        items:
+          type: string
+          x-dotwebstack-ldpath: ". :: xsd:string"
+      naam:
+        type: string
+        x-dotwebstack-ldpath: "rdfs:label :: xsd:string"
+      term:
+        type: string
+        x-dotwebstack-ldpath: "skos:prefLabel :: xsd:string"
+      uitleg:
+        type: string
+        x-dotwebstack-ldpath: "rdfs:comment :: xsd:string"
+      titel:
+        type: string
+        x-dotwebstack-ldpath: "dct:title :: xsd:string"
+      beschrijving:
+        type: string
+        x-dotwebstack-ldpath: "dct:description :: xsd:string"
+      gepubliceerd:
+        type: string
+        x-dotwebstack-ldpath: "dct:issued :: xsd:string"
+      laatsteWijziging:
+        type: string
+        x-dotwebstack-ldpath: "dct:modified :: xsd:string"
+      taal:
+        type: string
+        x-dotwebstack-ldpath: "dct:language :: xsd:string"
+      licentie:
+        type: string
+        x-dotwebstack-ldpath: "dct:license :: xsd:string"
+      rechten:
+        type: string
+        x-dotwebstack-ldpath: "dct:rights :: xsd:string"
+      versie:
+        type: string
+        x-dotwebstack-ldpath: "adms:version :: xsd:string"
+      versienotities:
+        type: string
+        x-dotwebstack-ldpath: "adms:versionNotes :: xsd:string"
+      relatie:
+        type: string
+        x-dotwebstack-ldpath: "dct:relation :: xsd:string"
+      beschrevenDoor:
+        type: string
+        x-dotwebstack-ldpath: "wdrs:describedby :: xsd:string"
+      werkingsgebied:
+        type: string
+        x-dotwebstack-ldpath: "dct:spatial :: xsd:string"
+      distributie:
+        type: array
+        x-dotwebstack-ldpath: "dcat:distribution :: xsd:string"
+        items:
+          type: string
+          x-dotwebstack-ldpath: ". :: xsd:string"
+      taxonomy:
+        type: string
+        x-dotwebstack-ldpath: "dcat:themeTaxonomy :: xsd:string"
+      sleutelwoord:
+        type: string
+        x-dotwebstack-ldpath: "dcat:keyword :: xsd:string"
+  Distribution:
+    type: object
+    required:
+    - type
+    properties:
+      type:
+        type: array
+        x-dotwebstack-ldpath: "rdf:type :: xsd:string"
+        items:
+          type: string
+          x-dotwebstack-ldpath: ". :: xsd:string"
+      naam:
+        type: string
+        x-dotwebstack-ldpath: "rdfs:label :: xsd:string"
+      term:
+        type: string
+        x-dotwebstack-ldpath: "skos:prefLabel :: xsd:string"
+      titel:
+        type: string
+        x-dotwebstack-ldpath: "dct:title :: xsd:string"
+      beschrijving:
+        type: string
+        x-dotwebstack-ldpath: "dct:description :: xsd:string"
+      gepubliceerd:
+        type: string
+        x-dotwebstack-ldpath: "dct:issued :: xsd:string"
+      laatsteWijziging:
+        type: string
+        x-dotwebstack-ldpath: "dct:modified :: xsd:string"
+      licentie:
+        type: string
+        x-dotwebstack-ldpath: "dct:license :: xsd:string"
+      rechten:
+        type: string
+        x-dotwebstack-ldpath: "dct:rights :: xsd:string"
+      url:
+        type: string
+        x-dotwebstack-ldpath: "dcat:accessURL :: xsd:string"
+      download:
+        type: string
+        x-dotwebstack-ldpath: "dcat:downloadURL :: xsd:string"
+  Entity:
+    type: object
+    required:
+    - type
+    properties:
+      einddatumGeldigheid:
+        type: string
+        x-dotwebstack-ldpath: "dcmiperiod:end :: xsd:string"
+      einddatumVersie:
+        type: string
+        x-dotwebstack-ldpath: "prov:invalidatedAtTime :: xsd:string"
+      startdatumGeldigheid:
+        type: string
+        x-dotwebstack-ldpath: "dcmiperiod:start :: xsd:string"
+      startdatumVersie:
+        type: string
+        x-dotwebstack-ldpath: "prov:generatedAtTime :: xsd:string"
+      status:
+        type: string
+        x-dotwebstack-ldpath: "adms:status :: xsd:string"
+      wasRevisionOf:
+        type: string
+        x-dotwebstack-ldpath: "prov:wasRevisionOf :: xsd:string"
+      type:
+        type: array
+        x-dotwebstack-ldpath: "rdf:type :: xsd:string"
+        items:
+          type: string
+          x-dotwebstack-ldpath: ". :: xsd:string"
+  Waardelijst:
+    type: object
+    required:
+    - type
+    properties:
+      bron:
+        type: string
+        x-dotwebstack-ldpath: "dct:source :: xsd:string"
+      definitie:
+        type: string
+        x-dotwebstack-ldpath: "skos:definition :: xsd:string"
+      domein:
+        type: string
+        x-dotwebstack-ldpath: "skos:inScheme :: xsd:string"
+      lid:
+        type: array
+        x-dotwebstack-ldpath: "skos:member :: xsd:string"
+        items:
+          type: string
+          x-dotwebstack-ldpath: ". :: xsd:string"
+      naam:
+        type: string
+        x-dotwebstack-ldpath: "rdfs:label :: xsd:string"
+      synoniem:
+        type: "array"
+        x-dotwebstack-ldpath: "skos:altLabel :: xsd:string"
+        items:
+          type: string
+      term:
+        type: string
+        x-dotwebstack-ldpath: "skos:prefLabel :: xsd:string"
+      toelichting:
+        type: string
+        x-dotwebstack-ldpath: "skos:scopeNote :: xsd:string"
+      type:
+        type: array
+        x-dotwebstack-ldpath: "rdf:type :: xsd:string"
+        items:
+          type: string
+          x-dotwebstack-ldpath: ". :: xsd:string"
+      uitleg:
+        type: string
+        x-dotwebstack-ldpath: "rdfs:comment :: xsd:string"
+        
