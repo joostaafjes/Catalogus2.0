@@ -2,7 +2,7 @@ swagger: "2.0"
 info:
   title: Catalogus API
   version: "0.2.0"
-host: %{API_HOSTNAME}
+host: catalogus.acceptatie.kadaster.nl
 basePath: /api/opvragen/v0.2
 produces:
   - application/json
